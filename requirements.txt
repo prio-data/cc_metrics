@@ -12,3 +12,4 @@ SQLAlchemy>=1.4.11
 psycopg2>=2.8.6
 requests>=2.25.1
 fitin>=0.2.0
+Shapely>=1.7.1

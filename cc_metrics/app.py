@@ -1,6 +1,6 @@
 
-from fastapi import FastAPI,Response
-from . import schema,api,config
+from fastapi import FastAPI,Response,BackgroundTasks
+from . import schema, api, config, metrics, batch
 
 app = FastAPI()
 
@@ -23,10 +23,12 @@ def summary(user:int):
 def year_summary(user:int):
     return schema.YearlySummary
 
-@app.get("/touch/{gwno}/{year}/{quarter}")
-async def touch(gwno:int, year:int, quarter:int):
+@app.get("/touch/{year}/{quarter}")
+async def touch(year:int, quarter:int,background_tasks: BackgroundTasks):
     """
     Checks if it is possible to compute metrics for the quarter,
     and does so if it is possible.
     """
+    background_tasks.add_task(batch.compute_metrics, year=year, quarter=quarter, ged_api = ged_api, preds_api = preds_api)
     return Response(status_code=204)
+

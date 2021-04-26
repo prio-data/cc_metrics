@@ -33,3 +33,6 @@ class Metric(Base):
                 value = value,
                 shape = shape
             )
+
+    def __str__(self):
+        return f"{self.shape.id}s {self.name}: {self.value}"

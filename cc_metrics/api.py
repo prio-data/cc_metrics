@@ -24,11 +24,15 @@ class Api:
         return os.path.join(self.url,path)
 
     def fetch_json(self,*args,**kwargs):
-        response = requests.get(self.make_url(*args,**kwargs))
+        url = self.make_url(*args,**kwargs)
+        response = requests.get(url)
         if response.status_code != 200:
+            logger.critical("Request to %s returned %s",
+                    response.url,response.status_code
+                    )
+                    
             raise requests.HTTPError(response=response)
-        else:
-            return response.json()
+        return response.json()
 
     def make_url(self,*args,**kwargs):
         path = os.path.join(*[str(e) for e in args])
@@ -37,6 +41,13 @@ class Api:
         if pstring:
             url += "?"+pstring
         return url
+
+class Scheduler(Api):
+    def get(self,shift:int):
+        response = self.fetch_json("",shift=shift)
+        for k in ("start","end"):
+            response[k] = date.fromisoformat(response[k])
+        return response 
 
 class Predictions(Api):
     def get(self, 
@@ -56,6 +67,9 @@ class Predictions(Api):
 
         return self.fetch_json("shapes",**args)
 
+    def get_countries(self,start_date:date ,end_date:date):
+        return self.fetch_json("shapes","countries",start_date=start_date,end_date=end_date)
+
 class Ged(Api):
     def get(self,type:ActualsType,*args,**kwargs):
         fetchers = {
@@ -73,8 +87,8 @@ class Ged(Api):
             else:
                 raise httpe
 
-    def get_points(self, country:int, year:int, quarter:int):
-        return self.fetch_json(country,year,quarter,"points")
+    def get_points(self, country:int, year:int, month:int):
+        return self.fetch_json(country,year,month,"points")
 
-    def get_buffered(self, country:int, year:int, quarter:int, buffer:int=50000):
-        return self.fetch_json(country,year,quarter,"buffered",buffer)
+    def get_buffered(self, country:int, year:int, month:int, buffer:int=50000):
+        return self.fetch_json(country,year,month,"buffered",buffer)

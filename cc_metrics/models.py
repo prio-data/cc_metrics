@@ -1,13 +1,23 @@
 
+import pickle
+import logging
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 import sqlalchemy as sa
-from . import db
+from azure_blob_storage_cache.exceptions import NotCached
+from . import db,config
 
-meta = sa.MetaData()
+
+try:
+    meta = config.general_cache["metrics-db-reflection"]
+    shapes = meta.tables["api_shape"]
+except NotCached:
+    logging.critical("Reflecting tables from DB")
+    meta = sa.MetaData()
+    shapes = sa.Table("api_shape",meta,autoload_with=db.engine)
+    config.general_cache["metrics-db-reflection"] = meta
+
 Base = declarative_base(metadata=meta)
-
-shapes = sa.Table("api_shape",Base.metadata,autoload_with=db.engine)
 
 class Shape(Base):
     __table__ = shapes

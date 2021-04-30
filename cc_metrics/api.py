@@ -49,6 +49,9 @@ class Scheduler(Api):
         for k in ("start","end"):
             response[k] = date.fromisoformat(response[k])
         return response 
+    def get_start_end(self,shift:int):
+        raw = self.get(shift)
+        return (raw["start"],raw["end"])
 
 class Predictions(Api):
     def get(self, 

@@ -14,3 +14,5 @@ requests>=2.25.1
 fitin>=0.2.0
 Shapely>=1.7.1
 azure-blob-storage-cache>=0.2.0
+pyproj>=3.0.1
+utm-zone>=1.0.2

@@ -178,6 +178,9 @@ def compute_metrics(
     with closing(db.Session()) as session:
         for c in countries:
             gwno = c["gwno"] 
+
+            """
+            Remove this?
             if (session
                     .query(models.Metric)
                     .join(models.shapes)
@@ -186,6 +189,7 @@ def compute_metrics(
                     ):
                 logger.info("There is already a metric for %s",gwno)
                 continue
+                """
 
             preds = preds_api.get(country = gwno,start_date=preds_start,end_date=preds_end) 
 

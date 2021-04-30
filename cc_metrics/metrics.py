@@ -1,6 +1,9 @@
 from collections import defaultdict
 from functools import reduce,partial
-from shapely.geometry import shape
+from shapely.geometry import shape,mapping
+import pyproj
+import utm_zone
+from . import spatial
 
 def identity(x,y):
     return .5
@@ -52,3 +55,6 @@ def conflict_coverage(prediction,buffered_points):
         return covers.area / pred_shape.area
     else:
         return 0
+
+def square_km_area(prediction,*_,**__):
+    return spatial.square_km_area(prediction)

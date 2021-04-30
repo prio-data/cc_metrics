@@ -27,7 +27,7 @@ def summary(user:int,shift:Optional[int]=None):
     Returns an overall summary of metrics for the user
     """
     with closing(db.Session()) as sess:
-        return get_summary(sess,user=user)
+        return get_summary(sess,user=user,shift=shift)
 
 @app.get("/{user:int}/countries")
 def time_countries(user:int,shift:Optional[int]=None):

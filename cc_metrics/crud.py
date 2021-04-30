@@ -3,8 +3,7 @@ from typing import Optional
 from datetime import date
 from sqlalchemy.orm import Session
 import numpy as np
-from functoolz import curry
-from compose import compose
+from toolz.functoolz import curry,compose
 from shapely.geometry import shape
 from . import models,spatial
 
@@ -56,10 +55,17 @@ def summary(
 
     metric_query = curry(metric_query,session)
 
+    def maybe_metric_query(metric,operation):
+        metrics = metric_query(metric)
+        if len(metrics) > 0:
+            return getattr(metrics,operation)()
+        else:
+            return None
+
     operations = {
-            "conflict_coverage": lambda: metric_query("conflict_coverage").mean(),
-            "predicted_area": lambda: metric_query("square_km_area").sum(),
-            "accuracy": lambda: metric_query("correct").mean(),
+            "predicted_area": lambda: maybe_metric_query("square_km_area","sum"),
+            "conflict_coverage": lambda: maybe_metric_query("conflict_coverage","mean"),
+            "accuracy": lambda: maybe_metric_query("correct","mean"),
         }
 
     shapes = compose(
@@ -81,5 +87,7 @@ def summary(
     else:
         for k in ops_if_shapes:
             results[k] = None 
+
+    results = {k:v for k,v in results.items() if not v is None}
 
     return results 

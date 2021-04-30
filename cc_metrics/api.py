@@ -25,6 +25,7 @@ class Api:
 
     def fetch_json(self,*args,**kwargs):
         url = self.make_url(*args,**kwargs)
+        logger.info("Fetching %s",url)
         response = requests.get(url)
         if response.status_code != 200:
             logger.critical("Request to %s returned %s",
@@ -67,8 +68,11 @@ class Predictions(Api):
 
         return self.fetch_json("shapes",**args)
 
-    def get_countries(self,start_date:date ,end_date:date):
-        return self.fetch_json("shapes","countries",start_date=start_date,end_date=end_date)
+class Users(Api):
+    def get_list(self):
+        return self.fetch_json("users")
+    def get_detail(self,user,start_date,end_date):
+        return self.fetch_json("users",user,start_date=start_date,end_date=end_date)
 
 class Ged(Api):
     def get(self,type:ActualsType,*args,**kwargs):
@@ -92,3 +96,9 @@ class Ged(Api):
 
     def get_buffered(self, country:int, year:int, month:int, buffer:int=50000):
         return self.fetch_json(country,year,month,"buffered",buffer)
+
+class Country(Api):
+    def get(self,gwno):
+        return self.fetch_json("countries",gwno)
+    def get_list(self,**kwargs):
+        return self.fetch_json("countries",**kwargs)

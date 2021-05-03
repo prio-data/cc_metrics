@@ -25,6 +25,7 @@ METRICS = [
         (metrics.correct,           api.ActualsType.Points),
         (metrics.discrepancy,       api.ActualsType.Points),
         (metrics.conflict_coverage, api.ActualsType.Buffered),
+        (metrics.square_km_area,    api.ActualsType.Points),
     ]
 
 general_cache = BlobCache(config("STORAGE_CONNECTION_STRING"),config("GENERAL_CACHE_CONTAINER"))

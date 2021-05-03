@@ -43,6 +43,7 @@ def actuals(prediction,points,kind="best"):
     return all_actuals(prediction,points)[kind]
 
 def conflict_coverage(prediction,buffered_points):
+    null_prediction = prediction["properties"]["intensity"] <= 0
     if buffered_points["features"]:
         pred_shape = shape(prediction["geometry"])
         points_shapes = [shape(pt["geometry"]) for pt in buffered_points["features"]]
@@ -52,9 +53,16 @@ def conflict_coverage(prediction,buffered_points):
             pred_shape = pred_shape.buffer(0)
 
         covers = pred_shape.intersection(shp_union)
-        return covers.area / pred_shape.area
+        cover_pst = covers.area / pred_shape.area 
+        if not null_prediction:
+            return cover_pst
+        else:
+            return 1 - cover_pst
     else:
-        return 0
+        if null_prediction:
+            return 1
+        else:
+            return 0
 
 def square_km_area(prediction,*_,**__):
     return spatial.square_km_area(prediction)

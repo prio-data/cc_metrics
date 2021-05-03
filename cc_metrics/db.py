@@ -8,6 +8,7 @@ from . import config
 def con():
     return connect(f"""
     host={config.config('DB_HOST')}
+    port={config.config('DB_PORT')}
     user={config.config('DB_USER')}
     password={config.config('DB_PASSWORD')}
     dbname={config.config('DB_NAME')}

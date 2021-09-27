@@ -1,5 +1,6 @@
-FROM python:3.8
+FROM prioreg.azurecr.io/prio-data/uvicorn_deployment:latest
 COPY requirements.txt /
 RUN pip install -r requirements.txt
-COPY /* /cc_ged/
-CMD ["gunicorn","-b","0.0.0.0:80","-k","uvicorn.workers.UvicornWorker","--forwarded-allow-ips","*","--proxy-allow-from","*","cc_ged.app:app"]
+COPY /cc_metrics /cc_metrics
+COPY compute_metrics.py /compute_metrics.py
+ENV APP cc_metrics.app:app

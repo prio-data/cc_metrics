@@ -5,7 +5,11 @@ from cc_metrics.batch import add_null_predictions ,compute_metrics
 
 logging.basicConfig(level=logging.INFO)
 
-shift = int(sys.argv[1])
+try:
+    shift = int(sys.argv[1])
+except (KeyError, ValueError):
+    print(f"Usage: compute_metrics.py {shift}")
+    sys.exit(1)
 
 add_null_predictions(preds_api,country_api,scheduler_api,users_api,shift)
 compute_metrics(ged_api,preds_api,scheduler_api,country_api,shift)

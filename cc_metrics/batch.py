@@ -39,11 +39,13 @@ def preds_null_prediction(predictions,country):
     else:
         return mapping(country_shape)
 
-def has_null_pred(session,user,country):
+def has_null_pred(session,user,country,period_start,period_end):
     return (session
             .query(models.Shape)
             .filter(models.Shape.country_id == country)
             .filter(models.Shape.author_id == user)
+            .filter(models.Shape.date >= period_start)
+            .filter(models.Shape.date <= period_end)
             .filter(models.Shape.null_prediction.is_(True))
             .first()
         ) is not None
@@ -68,7 +70,7 @@ def add_user_null_predictions(
         nullpredictions = []
 
         for country in {shp["country_id"] for shp in profile["participation"]["shapes"]}:
-            if has_null_pred(session,author,country):
+            if has_null_pred(session,author,country,start_date,end_date):
                 logger.info("Null prediction exists for user %s shape participation in %s",
                         author,country
                         )
@@ -104,7 +106,7 @@ def add_user_null_predictions(
             nullpredictions.append(shape)
 
         for country in {shp["country_id"] for shp in profile["participation"]["nonanswers"]}:
-            if has_null_pred(session,author,country):
+            if has_null_pred(session,author,country,start_date,end_date):
                 logger.info("Null prediction exists for user %s shape participation in %s",
                         author,country
                         )

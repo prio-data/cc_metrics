@@ -2,17 +2,17 @@ from typing import Optional
 import logging
 from fastapi import FastAPI,Response,BackgroundTasks
 from contextlib import closing
-from . import schema, api, config, metrics, batch, models, db, crud
+from . import schema, api, settings, metrics, batch, models, db, crud
 
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
 
-ged_api = api.Ged(config.config("GED_API_URL"))
-preds_api = api.Predictions(config.config("PREDS_API_URL"))
-users_api = api.Users(config.config("USERS_API_URL"))
-country_api = api.Country(config.config("COUNTRY_API_URL"))
-scheduler_api = api.Scheduler(config.config("SCHEDULER_URL"))
+ged_api = api.Ged(settings.GED_API_URL)
+preds_api = api.Predictions(settings.PREDS_API_URL)
+users_api = api.Users(settings.USERS_API_URL)
+country_api = api.Country(settings.COUNTRY_API_URL)
+scheduler_api = api.Scheduler(settings.SCHEDULER_URL)
 
 def get_summary(session,user,country=None,shift=None):
     if shift:

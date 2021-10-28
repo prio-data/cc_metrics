@@ -18,3 +18,4 @@ pyproj>=3.0.1
 utm-zone>=1.0.2
 numpy>=1.20.2
 toolz>=0.11.1
+anyio==3.3.4

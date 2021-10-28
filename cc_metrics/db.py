@@ -3,15 +3,15 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from psycopg2 import connect
-from . import config
+from . import settings 
 
 def con():
     return connect(f"""
-    host={config.config('DB_HOST')}
-    port={config.config('DB_PORT')}
-    user={config.config('DB_USER')}
-    password={config.config('DB_PASSWORD')}
-    dbname={config.config('DB_NAME')}
+    host={settings.DB_HOST}
+    port={settings.DB_PORT}
+    user={settings.DB_USER}
+    password={settings.DB_PASSWORD}
+    dbname={settings.DB_NAME}
     """)
 
 engine = create_engine("postgresql://",creator=con)

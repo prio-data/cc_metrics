@@ -8,7 +8,7 @@ from functools import reduce
 from sqlalchemy.orm import Session
 from shapely.geometry import shape,mapping
 
-from . import api,models,config,db,spatial
+from . import api,models,settings,db,spatial
 
 logger = logging.getLogger(__name__)
 
@@ -210,7 +210,7 @@ def compute_metrics(
                 actuals[t] = reduce(feature_collection_union,actuals[t])
 
             for prediction in preds["features"]:
-                for metric,required_type in config.METRICS:
+                for metric,required_type in settings.METRICS:
                     exists = (session
                             .query(models.Metric)
                             .get((int(prediction["id"]),metric.__name__))

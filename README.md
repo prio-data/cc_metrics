@@ -16,3 +16,12 @@ The service responsible for calculating and serving evaluation metrics for confl
 |SCHEDULER_API_URL                              |Url for an instance of ccsched                  |
 |BLOB_STORAGE_CONNECTION_STRING                 |Connection string to blob storage               |
 |GENERAL_CACHE_CONTAINER_NAME                   |Storage container for db reflection             |
+
+## Dependencies:
+
+|Service name                                   |Description                                     |
+|-----------------------------------------------|------------------------------------------------|
+|cc_ged                                         |Retrieving GED actuals                          |
+|cc_api                                         |Retrieving prediction shapes                    |
+|ccsched                                        |Scheduling information for subsetting           |
+|postgres                                       |Storing metrics                                 |
